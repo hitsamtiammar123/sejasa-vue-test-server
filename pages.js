@@ -34,6 +34,7 @@ async function fetchWeatherDetail(query){
       appid: APP_KEY,
       exclude: EXCLUDE,
       units: UNITS,
+      ...query
     }
     const response = await api.get('/onecall', {
       params
@@ -48,9 +49,8 @@ async function mapListData(d){
   try{
     const q = {
       lat: d.lat,
-      lon: d.lon,
+      lon: d.lng,
       appid: APP_KEY,
-      exclude: 'hourly,minutely',
     }
     const response = await fetchWeatherDetail(q);
     const responseData = response.data;
@@ -59,8 +59,13 @@ async function mapListData(d){
     const result = {
       pop: hourly.pop * 100,
       weather: current.weather[0],
-      district: d.district,
       wind_speed: current.wind_speed,
+      uvi: current.uvi,
+      temp: current.temp,
+      humidity: current.humidity,
+      location: d.location,
+      lat: responseData.lat,
+      lng: responseData.lon,
     }
     return result;
   }catch(err){
